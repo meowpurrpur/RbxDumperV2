@@ -82,12 +82,13 @@ void Dump::Scripts() {
 			uintptr_t bytecode = Mem::Read<uintptr_t>(embedded + bytecodePointer);
 			uintptr_t size = Mem::Read<uintptr_t>(embedded + bytecodeSize);
 
+			if (size != sizeof(expectedBytecode)) continue;
+
 			string bytecodeString;
 			bytecodeString.resize(size);
 
 			Mem::ReadBytes(bytecode, bytecodeString.data(), size);
-			if (size == sizeof(expectedBytecode) &&
-				memcmp(bytecodeString.data(), expectedBytecode, size) == 0) {
+			if (memcmp(bytecodeString.data(), expectedBytecode, size) == 0) {
 				break;
 			}
 		}
@@ -127,12 +128,13 @@ void Dump::Scripts() {
 			uintptr_t bytecode = Mem::Read<uintptr_t>(embedded + bytecodePointer);
 			uintptr_t size = Mem::Read<uintptr_t>(embedded + bytecodeSize);
 
+			if (size != sizeof(expectedBytecode)) continue;
+
 			string bytecodeString;
 			bytecodeString.resize(size);
 
 			Mem::ReadBytes(bytecode, bytecodeString.data(), size);
-			if (size == sizeof(expectedBytecode) &&
-				memcmp(bytecodeString.data(), expectedBytecode, size) == 0) {
+			if (memcmp(bytecodeString.data(), expectedBytecode, size) == 0) {
 				break;
 			}
 		}
