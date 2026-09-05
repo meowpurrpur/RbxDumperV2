@@ -54,7 +54,8 @@ Create a file named `config.json` in the same directory as the scripts/executabl
    - Set your max frame rate to **144 FPS**.
 2. Once in-game, run `run_dumper.bat`.
    - This runs `vulkan` to dump the Roblox process to `DumpedRoblox.exe`.
-   - Then it automatically launches `RbxDumperV2.exe`.
+   - Once the percentage reaches ~40%, press CTRL + C. It may ask you if you want to terminate the batch job, if so, type `n` then press enter.
+   - Then it automatically launches the dumper.
 3. The dumped offsets and FFlags will be saved in a versioned directory (e.g. `version-xxxxxxxx/`).
 
 ---
