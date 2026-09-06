@@ -46,6 +46,18 @@ static void init(const std::string& path) {
     DWORD processId;
     GetWindowThreadProcessId(hwnd, &processId);
 
+    if (Globals::UpdateResolution()) {
+        Logger::Log(Logger::Level::Info, "Detected Roblox window resolution: " + to_string(Globals::windowWidth) + "x" + to_string(Globals::windowHeight));
+    } else {
+        Logger::Log(Logger::Level::Warning, "Could not detect Roblox window resolution, using default: " + to_string(Globals::windowWidth) + "x" + to_string(Globals::windowHeight));
+    }
+
+    if (Globals::UpdateMaxFps()) {
+        Logger::Log(Logger::Level::Info, "Detected Roblox max FPS: " + to_string(static_cast<int>(Globals::maxFps)));
+    } else {
+        Logger::Log(Logger::Level::Warning, "Could not detect Roblox max FPS, using default: " + to_string(static_cast<int>(Globals::maxFps)));
+    }
+
     auto module = getModule("RobloxPlayerBeta.exe", processId);
     Globals::baseAddress = reinterpret_cast<uintptr_t>(module.modBaseAddr);
     if (!Globals::baseAddress) {
@@ -91,6 +103,7 @@ static void dumpAllOffsets() {
 
 int main(const int argc, char* argv[])
 {
+    SetProcessDPIAware();
     const auto startTime = chrono::high_resolution_clock::now();
     const HANDLE processHandle = GetCurrentProcess();
     SetPriorityClass(processHandle, REALTIME_PRIORITY_CLASS);
@@ -139,6 +152,4 @@ int main(const int argc, char* argv[])
     const chrono::duration<double> duration = endTime - startTime;
     const string message = "Dumped " + to_string(Globals::offsets.offsets.size()) + " offsets and " + to_string(Globals::fflagOffsets.offsets.size()) + " FFlags in " + to_string(duration.count()) + "s";
     Logger::Log(Logger::Level::Success, message);
-
-    system("pause");
 }

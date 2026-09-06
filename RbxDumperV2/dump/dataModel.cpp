@@ -79,7 +79,7 @@ void Dump::DataModel() {
 
 		for (int i = 0xb0; i < 0xFF; i++) {
 			double fps = 1 / Mem::Read<double>(heartbeat + i);
-			if (abs(fps - 144.0f) < 30.f) {
+			if (abs(fps - Globals::maxFps) < 30.0) {
 				heartbeatFpsOffset = i;
 				break;
 			}
@@ -154,7 +154,7 @@ void Dump::DataModel() {
 	while (true) {
 		if (targetFpsOffset >= 0x1000) break;
 		double targetFps = 1 / Mem::Read<double>(taskScheduler + targetFpsOffset);
-		if (abs(targetFps - 144.0f) < 1.f) {
+		if (abs(targetFps - Globals::maxFps) < 1.0) {
 			break;
 		}
 		targetFpsOffset++;

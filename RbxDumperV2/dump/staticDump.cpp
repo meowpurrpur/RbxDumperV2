@@ -34,7 +34,7 @@ void Dump::StaticDump()
 			for (int i = 0x0; i < 0xff; i++)
 			{
 				double targetFps = 1 / Mem::Read<double>(possibleSched + i);
-				if (abs(targetFps - 144.0f) < 1.f) {
+				if (abs(targetFps - Globals::maxFps) < 1.0) {
 					taskSchedulerPointer = addr;
 					break;
 				}
@@ -64,7 +64,7 @@ void Dump::StaticDump()
 				for (int i = 0x500; i < 0x1000; i++)
 				{
 					Vector2 dimensions = Mem::Read<Vector2>(possibleVisual + i);
-					if (abs(dimensions.x - 1920.f) <= 1.f)
+					if (abs(dimensions.x - Globals::windowResolution.x) <= 5.f && abs(dimensions.y - Globals::windowResolution.y) <= 5.f)
 					{
 						visualEnginePointer = addr + j;
 						break;
@@ -166,7 +166,7 @@ foundjob: {
 		"Dimensions",
 		"VisualEngine",
 		{ visualEngine },
-		{ Vector2(1920, 1080) }
+		{ Globals::windowResolution }
 	));
 
 	ViewMatrix_t targetMatrix{

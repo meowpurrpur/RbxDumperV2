@@ -9,6 +9,7 @@
 #include <sstream>
 #include <fstream>
 #include <filesystem>
+#include <regex>
 #define M_PI 3.14159265358979323846f
 
 using namespace std;
@@ -18,6 +19,7 @@ namespace fs = filesystem;
 #include "lib/logger.h"
 #include "lib/mem.hpp"
 #include "lib/json.hpp"
+#include "classes/vectors.h"
 #include "lib/rtti.hpp"
 #include "lib/patternScanning.hpp"
 #include "lib/dissasemble.h"
@@ -37,6 +39,79 @@ namespace Globals {
 	inline string robloxPath = "";
 
 	inline bool isFullDump = false;
+
+	inline int windowWidth = 1920;
+	inline int windowHeight = 1080;
+	inline Vector2 windowResolution = Vector2(1920.f, 1080.f);
+
+	inline double maxFps = 144.0;
+
+	inline bool UpdateMaxFps() {
+		char localAppData[MAX_PATH];
+		if (!GetEnvironmentVariableA("LOCALAPPDATA", localAppData, MAX_PATH)) {
+			return false;
+		}
+
+		std::filesystem::path settingsPath = std::filesystem::path(localAppData) / "Roblox" / "GlobalBasicSettings_13.xml";
+		if (!std::filesystem::exists(settingsPath)) {
+			return false;
+		}
+
+		std::ifstream file(settingsPath);
+		if (!file.is_open()) {
+			return false;
+		}
+
+		std::string content((std::istreambuf_iterator<char>(file)), std::istreambuf_iterator<char>());
+
+		std::regex capRegex(R"(<int[^>]*name=["']FramerateCap["'][^>]*>\s*(\d+)\s*</int>)");
+		std::smatch match;
+		if (std::regex_search(content, match, capRegex) && match.size() > 1) {
+			try {
+				double fps = std::stod(match[1].str());
+				if (fps > 0.0) {
+					maxFps = fps;
+					return true;
+				}
+			} catch (...) {}
+		}
+
+		std::string marker = "name=\"FramerateCap\">";
+		size_t pos = content.find(marker);
+		if (pos != std::string::npos) {
+			pos += marker.length();
+			size_t endPos = content.find("</int>", pos);
+			if (endPos != std::string::npos) {
+				try {
+					double fps = std::stod(content.substr(pos, endPos - pos));
+					if (fps > 0.0) {
+						maxFps = fps;
+						return true;
+					}
+				} catch (...) {}
+			}
+		}
+
+		return false;
+	}
+
+	inline bool UpdateResolution() {
+		HWND hwnd = FindWindowA(nullptr, "Roblox");
+		if (hwnd) {
+			RECT rect{};
+			if (GetClientRect(hwnd, &rect)) {
+				int width = rect.right - rect.left;
+				int height = rect.bottom - rect.top;
+				if (width > 0 && height > 0) {
+					windowWidth = width;
+					windowHeight = height;
+					windowResolution = Vector2(static_cast<float>(width), static_cast<float>(height));
+					return true;
+				}
+			}
+		}
+		return false;
+	}
 }
 
 namespace DumperConstants {
@@ -88,7 +163,6 @@ namespace DumperConstants {
 	}
 }
 
-#include "classes/vectors.h"
 #include "classes/helper.h"
 #include "classes/roblox.h"
 #include "dump/dump.h"

@@ -96,17 +96,19 @@ void Dump::Camera() {
 		0x100
 	));
 
+	Globals::UpdateResolution();
+
 	Helper::DoBasicScan(BasicScanConfig<int16_t>(
 		"Viewport",
 		"Camera",
 		{ currentCamera },
-		{ 1920 }
+		{ static_cast<int16_t>(Globals::windowWidth) }
 	));
 
 	Helper::DoBasicScan(BasicScanConfig<Vector2>(
 		"ViewportSize",
 		"Camera",
 		{ currentCamera },
-		{ Vector2(1920.f, 1080.f) }
+		{ Globals::windowResolution }
 	));
 }

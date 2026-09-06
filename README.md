@@ -50,8 +50,6 @@ Create a file named `config.json` in the same directory as the scripts/executabl
 ## How to Run
 
 1. Open Roblox and join the [game](https://www.roblox.com/games/113264082193197/Dumper9000) using the account specified in `config.json`.
-   - Make sure your Roblox is set to **fullscreen at 1920x1080** resolution.
-   - Set your max frame rate to **144 FPS**.
 2. Once in-game, run `run_dumper.bat`.
    - This runs `vulkan` to dump the Roblox process to `DumpedRoblox.exe`.
    - Once the percentage reaches ~40%, press CTRL + C. It may ask you if you want to terminate the batch job, if so, type `n` then press enter.

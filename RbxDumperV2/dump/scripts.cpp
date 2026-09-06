@@ -33,7 +33,11 @@ void Dump::Scripts() {
 			uintptr_t bytecode = Mem::Read<uintptr_t>(embedded + bytecodePointer);
 			uintptr_t size = Mem::Read<uintptr_t>(embedded + bytecodeSize);
 
-			if (size != sizeof(expectedBytecode)) continue;
+			if (size != sizeof(expectedBytecode))
+			{
+				localScriptBytecodeOffset++;
+				continue;
+			}
 
 			string bytecodeString;
 			bytecodeString.resize(size);
@@ -82,7 +86,11 @@ void Dump::Scripts() {
 			uintptr_t bytecode = Mem::Read<uintptr_t>(embedded + bytecodePointer);
 			uintptr_t size = Mem::Read<uintptr_t>(embedded + bytecodeSize);
 
-			if (size != sizeof(expectedBytecode)) continue;
+			if (size != sizeof(expectedBytecode))
+			{
+				moduleScriptBytecodeOffset++;
+				continue;
+			}
 
 			string bytecodeString;
 			bytecodeString.resize(size);
@@ -123,12 +131,17 @@ void Dump::Scripts() {
 			break;
 		}
 
-		try {
+		try
+		{
 			uintptr_t embedded = Mem::Read<uintptr_t>(script + scriptBytecodeOffset);
 			uintptr_t bytecode = Mem::Read<uintptr_t>(embedded + bytecodePointer);
 			uintptr_t size = Mem::Read<uintptr_t>(embedded + bytecodeSize);
 
-			if (size != sizeof(expectedBytecode)) continue;
+			if (size != sizeof(expectedBytecode))
+			{
+				scriptBytecodeOffset++;
+				continue;
+			}
 
 			string bytecodeString;
 			bytecodeString.resize(size);
