@@ -516,7 +516,7 @@ void Dump::Players() {
 
 		pingOffset++;
 	}
-	Globals::offsets.add("Value", "StatsItem", 0xc8, "double");
+	Globals::offsets.add("Value", "StatsItem", pingOffset, "double");
 
 	uintptr_t backpack = Roblox::FindFirstChild(localPlayer, "Backpack");
 
